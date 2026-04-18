@@ -1,1 +1,194 @@
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تشخيص كاش ناس - Cash Clinic</title>
+    <style>
+        :root {
+            --primary-color: #004d40; /* Professional Deep Teal */
+            --accent-color: #d4af37;  /* Gold accent */
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Logo Position */
+        .logo-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .logo-container img {
+            max-width: 120px;
+            height: auto;
+        }
+
+        /* Quiz Card */
+        .quiz-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        h1 { color: var(--primary-color); font-size: 1.5rem; }
+        p { margin-bottom: 30px; line-height: 1.6; }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            background: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-color);
+            background-color: #e0f2f1;
+        }
+
+        .hidden { display: none; }
+
+        .result-title { color: var(--accent-color); font-weight: bold; font-size: 1.8rem; }
+        
+        .cta-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 25px;
+            background-color: #25D366; /* WhatsApp Green */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="logo-container">
+        <img src="logo.png" alt="Cash Clinic Logo">
+    </div>
+
+    <div class="quiz-card" id="quiz-container">
+        <div id="question-space">
+            <h1 id="question-text">مرحباً بك في تشخيص كاش ناس</h1>
+            <p id="instruction-text">لنبدأ بتحديد وضعك المالي الحالي بدقة.</p>
+            <div id="options-container">
+                <button class="option-btn" onclick="startQuiz()">ابدأ التشخيص</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "كيف تصف وضعك الوظيفي الحالي؟",
+                options: [
+                    { text: "موظف براتب ثابت", score: "A" },
+                    { text: "صاحب عمل / عمل حر", score: "B" },
+                    { text: "باحث عن عمل", score: "C" }
+                ]
+            },
+            {
+                question: "هل يتبقى شيء من راتبك في نهاية الشهر؟",
+                options: [
+                    { text: "نعم، أدخر جزءاً منه", score: "A" },
+                    { text: "بالكاد يكفي للالتزامات", score: "B" },
+                    { text: "ينتهي قبل نهاية الشهر", score: "C" }
+                ]
+            },
+            {
+                question: "ما هو هدفك الأساسي حالياً؟",
+                options: [
+                    { text: "تطوير استثماراتي", score: "A" },
+                    { text: "التخلص من الديون", score: "B" },
+                    { text: "تنظيم مصاريفي الأساسية", score: "C" }
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let results = [];
+
+        function startQuiz() {
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = quizData[currentQuestion];
+            document.getElementById('question-text').innerText = q.question;
+            document.getElementById('instruction-text').innerText = `سؤال ${currentQuestion + 1} من ${quizData.length}`;
+            const optionsDiv = document.getElementById('options-container');
+            optionsDiv.innerHTML = '';
+
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt.text;
+                btn.onclick = () => handleAnswer(opt.score);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(score) {
+            results.push(score);
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            const container = document.getElementById('quiz-container');
+            // Simplified logic: based on the most frequent answer
+            const mostFrequent = results.sort((a,b) =>
+                  results.filter(v => v===a).length - results.filter(v => v===b).length
+            ).pop();
+
+            let finalProgram = "";
+            let description = "";
+
+            if (mostFrequent === "A") {
+                finalProgram = "برنامج المرتاحين";
+                description = "وضعك جيد ولكنك تحتاج لخطة استثمارية ذكية.";
+            } else if (mostFrequent === "B") {
+                finalProgram = "برنامج المديونين";
+                description = "نساعدك على وضع خطة لسداد الالتزامات واستعادة السيطرة.";
+            } else {
+                finalProgram = "برنامج المعتفسين";
+                description = "نحتاج لإعادة هيكلة كاملة لميزانيتك لإنقاذ الموقف.";
+            }
+
+            container.innerHTML = `
+                <div class="result-title">${finalProgram}</div>
+                <p>${description}</p>
+                <p>اضغط أدناه لمشاركة النتيجة مع مستشارك المالي:</p>
+                <a href="https://wa.me/YOUR_NUMBER?text=انتهيت من التشخيص ونتيجتي هي: ${finalProgram}" class="cta-button">تواصل عبر واتساب</a>
+            `;
+        }
+    </script>
+</body>
+</html>
