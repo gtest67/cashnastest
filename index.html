@@ -1,193 +1,262 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تشخيص كاش ناس - Cash Clinic</title>
+    <title>تشخيص كاش ناس | Cash Clinic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #004d40; /* Professional Deep Teal */
-            --accent-color: #d4af37;  /* Gold accent */
-            --bg-color: #f4f7f6;
-            --text-color: #333;
+            --primary: #004d40;
+            --accent: #d4af37;
+            --text: #2c3e50;
+            --bg: #f0f4f3;
         }
 
+        * { box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background: linear-gradient(135deg, #e0e7e5 0%, #f0f4f3 100%);
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            padding: 20px;
         }
 
-        /* Logo Position */
-        .logo-container {
+        /* Top Right Logo */
+        .header {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 30px;
+            right: 40px;
+            z-index: 10;
         }
 
-        .logo-container img {
-            max-width: 120px;
+        .header img {
+            width: 140px;
             height: auto;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
 
-        /* Quiz Card */
-        .quiz-card {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            max-width: 500px;
-            width: 90%;
+        /* Main Container */
+        #quiz-app {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 50px 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 550px;
             text-align: center;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.5s ease;
         }
 
-        h1 { color: var(--primary-color); font-size: 1.5rem; }
-        p { margin-bottom: 30px; line-height: 1.6; }
+        .fade-in { animation: fadeIn 0.5s forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .option-btn {
+        h1 { color: var(--primary); font-size: 1.8rem; margin-top: 0; }
+        p.subtitle { color: #666; margin-bottom: 40px; }
+
+        /* Buttons */
+        .option-card {
+            background: white;
+            border: 2px solid #eef2f1;
+            padding: 18px;
+            margin: 12px 0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 1.1rem;
+            color: var(--text);
             display: block;
             width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border: 2px solid #eee;
-            border-radius: 8px;
-            background: none;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s;
+            text-align: right;
+            position: relative;
         }
 
-        .option-btn:hover {
-            border-color: var(--primary-color);
-            background-color: #e0f2f1;
+        .option-card:hover {
+            border-color: var(--primary);
+            background: #f0f8f7;
+            transform: translateX(-5px);
         }
 
-        .hidden { display: none; }
-
-        .result-title { color: var(--accent-color); font-weight: bold; font-size: 1.8rem; }
-        
-        .cta-button {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 25px;
-            background-color: #25D366; /* WhatsApp Green */
+        .start-btn {
+            background: var(--primary);
             color: white;
-            text-decoration: none;
-            border-radius: 5px;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,77,64,0.3);
+        }
+
+        /* Result Section */
+        .result-badge {
+            background: var(--accent);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 15px;
             font-weight: bold;
         }
+
+        .result-title { font-size: 2.2rem; color: var(--primary); margin-bottom: 20px; }
+        
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            margin-top: 25px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #eee;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .progress-fill { height: 100%; background: var(--accent); transition: width 0.3s; }
+
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="logo-container">
-        <img src="logo.png" alt="Cash Clinic Logo">
+    <div class="header">
+        <img src="logo.png" alt="Cash Clinic">
     </div>
 
-    <div class="quiz-card" id="quiz-container">
-        <div id="question-space">
-            <h1 id="question-text">مرحباً بك في تشخيص كاش ناس</h1>
-            <p id="instruction-text">لنبدأ بتحديد وضعك المالي الحالي بدقة.</p>
-            <div id="options-container">
-                <button class="option-btn" onclick="startQuiz()">ابدأ التشخيص</button>
-            </div>
+    <div id="quiz-app" class="fade-in">
+        <div id="start-screen">
+            <h1>خطوتك الأولى للعلاج المالي</h1>
+            <p class="subtitle">التشخيص الدقيق هو نصف الحل. أجب بصدق لنحدد الباقة الأنسب لك.</p>
+            <button class="start-btn" onclick="startQuiz()">ابدأ التشخيص المالي</button>
+        </div>
+
+        <div id="quiz-content" class="hidden">
+            <div class="progress-bar"><div id="progress" class="progress-fill" style="width: 0%"></div></div>
+            <h2 id="question-text" style="color: var(--primary);"></h2>
+            <div id="options-container"></div>
+        </div>
+
+        <div id="result-screen" class="hidden">
+            <div class="result-badge">التشخيص النهائي</div>
+            <div id="package-name" class="result-title"></div>
+            <p id="package-desc" style="line-height: 1.8; color: #555;"></p>
+            <a id="wa-link" href="#" class="whatsapp-btn">
+                تواصل مع السكرتارية لبدء العلاج
+            </a>
         </div>
     </div>
 
     <script>
-        const quizData = [
+        const questions = [
             {
-                question: "كيف تصف وضعك الوظيفي الحالي؟",
+                q: "ما هو وضعك الوظيفي الحالي؟",
                 options: [
-                    { text: "موظف براتب ثابت", score: "A" },
-                    { text: "صاحب عمل / عمل حر", score: "B" },
-                    { text: "باحث عن عمل", score: "C" }
+                    { t: "موظف براتب ثابت", s: "A" },
+                    { t: "صاحب عمل أو عمل حر", s: "A" },
+                    { t: "باحث عن عمل / طالب", s: "C" }
                 ]
             },
             {
-                question: "هل يتبقى شيء من راتبك في نهاية الشهر؟",
+                q: "ما هي أكبر مشكلة تعاني منها حالياً؟",
                 options: [
-                    { text: "نعم، أدخر جزءاً منه", score: "A" },
-                    { text: "بالكاد يكفي للالتزامات", score: "B" },
-                    { text: "ينتهي قبل نهاية الشهر", score: "C" }
+                    { t: "الديون والأقساط تضغط على ميزانيتي", s: "B" },
+                    { t: "الراتب ينتهي بسرعة ولا أعرف أين يذهب", s: "C" },
+                    { t: "وضعي مستقر وأريد حماية وتطوير ثروتي", s: "A" }
                 ]
             },
             {
-                question: "ما هو هدفك الأساسي حالياً؟",
+                q: "هل تملك صندوق طوارئ (مبلغ جانبي للظروف)؟",
                 options: [
-                    { text: "تطوير استثماراتي", score: "A" },
-                    { text: "التخلص من الديون", score: "B" },
-                    { text: "تنظيم مصاريفي الأساسية", score: "C" }
+                    { t: "نعم، ومبلغه كافٍ", s: "A" },
+                    { t: "نعم، ولكن المبلغ بسيط جداً", s: "B" },
+                    { t: "لا أملك أي مدخرات حالياً", s: "C" }
+                ]
+            },
+            {
+                q: "كيف تصف شعورك تجاه وضعك المالي؟",
+                options: [
+                    { t: "قلق دائم وأفكر في الهروب من الضغوط", s: "C" },
+                    { t: "مضغوط بسبب الالتزامات فقط", s: "B" },
+                    { t: "مرتاح ولكن أحتاج لخطة ذكية", s: "A" }
                 ]
             }
         ];
 
-        let currentQuestion = 0;
-        let results = [];
+        let currentIdx = 0;
+        let scores = { A: 0, B: 0, C: 0 };
 
         function startQuiz() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-content').classList.remove('hidden');
             showQuestion();
         }
 
         function showQuestion() {
-            const q = quizData[currentQuestion];
-            document.getElementById('question-text').innerText = q.question;
-            document.getElementById('instruction-text').innerText = `سؤال ${currentQuestion + 1} من ${quizData.length}`;
-            const optionsDiv = document.getElementById('options-container');
-            optionsDiv.innerHTML = '';
-
+            const q = questions[currentIdx];
+            document.getElementById('question-text').innerText = q.q;
+            document.getElementById('progress').style.width = ((currentIdx / questions.length) * 100) + "%";
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
             q.options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn';
-                btn.innerText = opt.text;
-                btn.onclick = () => handleAnswer(opt.score);
-                optionsDiv.appendChild(btn);
+                const div = document.createElement('div');
+                div.className = 'option-card fade-in';
+                div.innerText = opt.t;
+                div.onclick = () => next(opt.s);
+                container.appendChild(div);
             });
         }
 
-        function handleAnswer(score) {
-            results.push(score);
-            currentQuestion++;
-            if (currentQuestion < quizData.length) {
+        function next(score) {
+            scores[score]++;
+            currentIdx++;
+            if (currentIdx < questions.length) {
                 showQuestion();
             } else {
-                showResult();
+                calculateResult();
             }
         }
 
-        function showResult() {
-            const container = document.getElementById('quiz-container');
-            // Simplified logic: based on the most frequent answer
-            const mostFrequent = results.sort((a,b) =>
-                  results.filter(v => v===a).length - results.filter(v => v===b).length
-            ).pop();
+        function calculateResult() {
+            document.getElementById('quiz-content').classList.add('hidden');
+            const resultScreen = document.getElementById('result-screen');
+            resultScreen.classList.remove('hidden');
 
-            let finalProgram = "";
-            let description = "";
-
-            if (mostFrequent === "A") {
-                finalProgram = "برنامج المرتاحين";
-                description = "وضعك جيد ولكنك تحتاج لخطة استثمارية ذكية.";
-            } else if (mostFrequent === "B") {
-                finalProgram = "برنامج المديونين";
-                description = "نساعدك على وضع خطة لسداد الالتزامات واستعادة السيطرة.";
+            let title, desc;
+            // Winning Logic
+            if (scores.A >= 2) {
+                title = "باقة المرتاحين";
+                desc = "أنت تملك استقراراً مالياً جيداً. هدفنا في هذه الباقة هو حماية مكتسباتك، تنظيم أصولك، وتحويل دخلك الحالي إلى نمو مستدام بعيداً عن المخاطر.";
+            } else if (scores.B >= scores.C) {
+                title = "باقة المديونين";
+                desc = "هذه الباقة هي طوق النجاة. سنعمل معاً على السيطرة على الديون، إعادة ترتيب الالتزامات بدون حرمان، وخلق فائض مالي من راتبك الحالي.";
             } else {
-                finalProgram = "برنامج المعتفسين";
-                description = "نحتاج لإعادة هيكلة كاملة لميزانيتك لإنقاذ الموقف.";
+                title = "باقة المعتفسين";
+                desc = "تحتاج إلى إعادة هيكلة كاملة وتدخل علاجي من الصفر. سنقوم بإيقاف النزيف المالي فوراً واستعادة السيطرة على ميزانيتك لنخلصك من القلق الدائم.";
             }
 
-            container.innerHTML = `
-                <div class="result-title">${finalProgram}</div>
-                <p>${description}</p>
-                <p>اضغط أدناه لمشاركة النتيجة مع مستشارك المالي:</p>
-                <a href="https://wa.me/2226060820?text=انتهيت من التشخيص ونتيجتي هي: ${finalProgram}" class="cta-button">تواصل عبر واتساب</a>
-            `;
+            document.getElementById('package-name').innerText = title;
+            document.getElementById('package-desc').innerText = desc;
+            
+            // Set WhatsApp Link (Update your number here)
+            const phone = "9652226060820"; // ضع رقم السكرتارية هنا
+            const msg = encodeURIComponent(`مرحباً كاش كلينيك، لقد أكملت التشخيص المالي لـ "كاش ناس" ونتيجتي هي: ${title}. أرغب في البدء بالعلاج المالي.`);
+            document.getElementById('wa-link').href = `https://wa.me/${phone}?text=${msg}`;
         }
     </script>
 </body>
